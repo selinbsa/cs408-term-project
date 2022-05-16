@@ -45,30 +45,30 @@
             // 
             // textBoxIp
             // 
-            this.textBoxIp.Location = new System.Drawing.Point(64, 36);
+            this.textBoxIp.Location = new System.Drawing.Point(73, 38);
             this.textBoxIp.Name = "textBoxIp";
-            this.textBoxIp.Size = new System.Drawing.Size(110, 23);
+            this.textBoxIp.Size = new System.Drawing.Size(125, 22);
             this.textBoxIp.TabIndex = 0;
             // 
             // textBoxPort
             // 
-            this.textBoxPort.Location = new System.Drawing.Point(64, 89);
+            this.textBoxPort.Location = new System.Drawing.Point(73, 95);
             this.textBoxPort.Name = "textBoxPort";
-            this.textBoxPort.Size = new System.Drawing.Size(110, 23);
+            this.textBoxPort.Size = new System.Drawing.Size(125, 22);
             this.textBoxPort.TabIndex = 0;
             // 
             // textBoxUsn
             // 
-            this.textBoxUsn.Location = new System.Drawing.Point(64, 145);
+            this.textBoxUsn.Location = new System.Drawing.Point(97, 155);
             this.textBoxUsn.Name = "textBoxUsn";
-            this.textBoxUsn.Size = new System.Drawing.Size(110, 23);
+            this.textBoxUsn.Size = new System.Drawing.Size(125, 22);
             this.textBoxUsn.TabIndex = 0;
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(55, 227);
+            this.buttonConnect.Location = new System.Drawing.Point(63, 242);
             this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(110, 23);
+            this.buttonConnect.Size = new System.Drawing.Size(126, 25);
             this.buttonConnect.TabIndex = 1;
             this.buttonConnect.Text = "Connect";
             this.buttonConnect.UseVisualStyleBackColor = true;
@@ -77,17 +77,17 @@
             // textBoxPost
             // 
             this.textBoxPost.Enabled = false;
-            this.textBoxPost.Location = new System.Drawing.Point(287, 39);
+            this.textBoxPost.Location = new System.Drawing.Point(328, 42);
             this.textBoxPost.Name = "textBoxPost";
-            this.textBoxPost.Size = new System.Drawing.Size(181, 23);
+            this.textBoxPost.Size = new System.Drawing.Size(206, 22);
             this.textBoxPost.TabIndex = 0;
             // 
             // buttonDisc
             // 
             this.buttonDisc.Enabled = false;
-            this.buttonDisc.Location = new System.Drawing.Point(55, 274);
+            this.buttonDisc.Location = new System.Drawing.Point(63, 292);
             this.buttonDisc.Name = "buttonDisc";
-            this.buttonDisc.Size = new System.Drawing.Size(110, 23);
+            this.buttonDisc.Size = new System.Drawing.Size(126, 25);
             this.buttonDisc.TabIndex = 1;
             this.buttonDisc.Text = "Disconnect";
             this.buttonDisc.UseVisualStyleBackColor = true;
@@ -96,9 +96,9 @@
             // buttonPost
             // 
             this.buttonPost.Enabled = false;
-            this.buttonPost.Location = new System.Drawing.Point(313, 68);
+            this.buttonPost.Location = new System.Drawing.Point(358, 73);
             this.buttonPost.Name = "buttonPost";
-            this.buttonPost.Size = new System.Drawing.Size(110, 23);
+            this.buttonPost.Size = new System.Drawing.Size(126, 25);
             this.buttonPost.TabIndex = 1;
             this.buttonPost.Text = "Post";
             this.buttonPost.UseVisualStyleBackColor = true;
@@ -107,9 +107,9 @@
             // buttonGetPosts
             // 
             this.buttonGetPosts.Enabled = false;
-            this.buttonGetPosts.Location = new System.Drawing.Point(313, 328);
+            this.buttonGetPosts.Location = new System.Drawing.Point(358, 350);
             this.buttonGetPosts.Name = "buttonGetPosts";
-            this.buttonGetPosts.Size = new System.Drawing.Size(110, 23);
+            this.buttonGetPosts.Size = new System.Drawing.Size(126, 25);
             this.buttonGetPosts.TabIndex = 1;
             this.buttonGetPosts.Text = "Get Posts";
             this.buttonGetPosts.UseVisualStyleBackColor = true;
@@ -117,53 +117,53 @@
             // 
             // logs
             // 
-            this.logs.Location = new System.Drawing.Point(254, 120);
+            this.logs.Location = new System.Drawing.Point(290, 128);
             this.logs.Name = "logs";
-            this.logs.Size = new System.Drawing.Size(245, 202);
+            this.logs.Size = new System.Drawing.Size(279, 215);
             this.logs.TabIndex = 2;
             this.logs.Text = "";
             // 
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Location = new System.Drawing.Point(23, 39);
+            this.label.Location = new System.Drawing.Point(26, 42);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(20, 15);
+            this.label.Size = new System.Drawing.Size(24, 17);
             this.label.TabIndex = 3;
             this.label.Text = "IP:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 92);
+            this.label2.Location = new System.Drawing.Point(26, 98);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 15);
+            this.label2.Size = new System.Drawing.Size(38, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "Port:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 148);
+            this.label3.Location = new System.Drawing.Point(14, 158);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 15);
+            this.label3.Size = new System.Drawing.Size(77, 17);
             this.label3.TabIndex = 3;
             this.label3.Text = "Username:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(243, 42);
+            this.label4.Location = new System.Drawing.Point(278, 45);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(30, 15);
+            this.label4.Size = new System.Drawing.Size(36, 17);
             this.label4.TabIndex = 3;
             this.label4.Text = "Post";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(914, 480);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);

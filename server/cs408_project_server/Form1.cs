@@ -4,20 +4,18 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Net;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
-
+using System.Net.Sockets;
 using System.IO;
 
-namespace step1_server
+namespace cs408_project_server
 {
     public partial class Form1 : Form
     {
-        
         struct clientInformation                //stores username and socket of the client together
         {
             public string userName;
@@ -28,10 +26,10 @@ namespace step1_server
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         List<clientInformation> clientSockets = new List<clientInformation>();         //store info about connected clients in a list
 
+
         bool terminating = false;
         bool listening = false;
-        int sweet_id = 0;                   //unique ID for received sweet posts
-
+        int post_id = 0;
 
         public Form1()
         {
@@ -39,7 +37,8 @@ namespace step1_server
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
             InitializeComponent();
         }
-        private int get_sweet_id()          //get sweet id for the next sweet
+        
+        private int get_post_id()          //get sweet id for the next sweet
         {
             string filename = @"sweets.txt";
             if (System.IO.File.Exists(filename))
@@ -67,18 +66,18 @@ namespace step1_server
             }
             else
             {
-                return 0;   //no sweets posted yet
+                return 0;  
             }
         }
+        
 
-
-        private void buttonListen_Click(object sender, EventArgs e)
+      
+        private void buttonListen_Click_1(object sender, EventArgs e)
         {
-            
-            sweet_id = get_sweet_id();
+            post_id = get_post_id();
             int serverPort;
 
-            if (Int32.TryParse(textBoxPort.Text, out serverPort))   //port number needs to be an integer
+            if (Int32.TryParse(textBoxPort.Text, out serverPort))  
             {
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, serverPort);
                 serverSocket.Bind(endPoint);
@@ -88,7 +87,7 @@ namespace step1_server
                 listening = true;
                 buttonListen.Enabled = false;
 
-                Thread acceptThread = new Thread(Accept);           //start accepting clients
+                Thread acceptThread = new Thread(Accept);          
                 acceptThread.Start();
 
                 logs.AppendText("Started listening on port: " + serverPort + "\n");
@@ -99,6 +98,7 @@ namespace step1_server
                 logs.AppendText("Please check port number \n");
             }
         }
+
         private void Accept()
         {
             while (listening)
@@ -106,8 +106,7 @@ namespace step1_server
                 try
                 {
                     Socket newClient = serverSocket.Accept();
-                    checkUserName(newClient);                   //after accepting a client; check user name, if user name is 
-                                                                //unaccaptable, disconnect the client
+                    check_User_Name(newClient);                   //after accepting a client; check user name
                 }
                 catch
                 {
@@ -123,43 +122,36 @@ namespace step1_server
                 }
             }
         }
-
-        private void sendBoolean(bool value, Socket clientSocket) //send boolean value to the client
-        {
-            Byte[] buffer = BitConverter.GetBytes(value);
-            clientSocket.Send(buffer);
-        }
-
-        private void checkUserName(Socket newClient)
+        private void check_User_Name(Socket newClient)
         {
             Byte[] buffer = new Byte[64];
-            newClient.Receive(buffer);                              //receive user name from client
+            newClient.Receive(buffer);                       
             string user_name = Encoding.Default.GetString(buffer);
             user_name = user_name.Substring(0, user_name.IndexOf("\0"));
 
             if (clientSockets.Any(client => client.userName == user_name))      //a client with this user name has already connected
             {
-                sendBoolean(false, newClient);  //give feedback to the client, connection is disabled
+                ConnectionCheck(false, newClient);  //give information about the connected clients in the server, connection is disabled
 
                 logs.AppendText("Another client with the same username is already connected, client is not accepted.\n");
                 newClient.Close();
             }
             else
             {
-                //string fileName = "../../user-db.txt";
-                string fileName = @"C:\Users\hp\Documents\Visual Studio 2019\Projects\cs408\step1_server\user-db.txt";
+                string fileName = "../../user-db.txt";
+                //string fileName = @"C:\Users\ESRA\OneDrive\Belgeler\Visual Studio 2015\Projects\cs408_project_server\user-db.txt";
                 string[] lines = File.ReadAllLines(fileName);
 
                 if (!lines.Contains(user_name))     //this user name does not exist in the user database
                 {
-                    sendBoolean(false, newClient);      //give feedback to the client, connection is disabled
+                    ConnectionCheck(false, newClient);     
 
                     logs.AppendText("The client's username does not exists in the database, client is not accepted.\n");
                     newClient.Close();
                 }
                 else
                 {
-                    sendBoolean(true, newClient);       //give feedback to the client, connection is succeeded
+                    ConnectionCheck(true, newClient);     
 
                     clientInformation accepted_client = new clientInformation(user_name, newClient);
                     clientSockets.Add(accepted_client);
@@ -171,8 +163,9 @@ namespace step1_server
             }
         }
 
-        private void Receive(clientInformation thisClient)  //receive messages from cients
+        private void Receive(clientInformation thisClient)
         {
+
             bool connected = true;
 
             while (connected && !terminating)
@@ -186,7 +179,6 @@ namespace step1_server
                     string operation = Encoding.Default.GetString(buffer);          //the client sends the name of the operation
                     operation = operation.Substring(0, operation.IndexOf("\0"));    //to be completed before sending actual data
 
-                    
                     if (operation == "request")
                     {
                         sendRequested(thisClient);
@@ -195,8 +187,6 @@ namespace step1_server
                     {
                         postMessage(thisClient);
                     }
-
-
 
                 }
                 catch
@@ -211,12 +201,22 @@ namespace step1_server
                 }
             }
         }
-
+        private void Form1_FormClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            listening = false;
+            terminating = true;
+            Environment.Exit(0);
+        }
+        private void ConnectionCheck(bool value, Socket clientSocket) //send boolean value to the client
+        {
+            Byte[] buffer = BitConverter.GetBytes(value);
+            clientSocket.Send(buffer);
+        }
         private void sendRequested(clientInformation thisClient)    //send all sweets that was not posted by that user
         {
             logs.AppendText("\nThe following sweets are sent to user " + thisClient.userName + ":\n");
 
-            string fileName = @"C:\Users\hp\Documents\Visual Studio 2019\Projects\cs408\step1_server\posts.txt";
+            string fileName = "../../posts.txt"; ;
             if (System.IO.File.Exists(fileName))
             {
                 if (new FileInfo(fileName).Length != 0)        //we have at least 1 sweet already posted
@@ -259,7 +259,6 @@ namespace step1_server
                 }
             }
         }
-
         private void postMessage(clientInformation thisClient)
         {
             Byte[] buffer_3 = new Byte[64];               //receive sweet from client
@@ -269,24 +268,18 @@ namespace step1_server
             string incomingMessage = Encoding.Default.GetString(buffer_3);
             incomingMessage = incomingMessage.Substring(0, incomingMessage.IndexOf("\0"));
 
-            File.AppendAllText(@"C:\Users\hp\Documents\Visual Studio 2019\Projects\cs408\step1_server\posts.txt", sweet_id + "\n" + thisClient.userName
+            File.AppendAllText("../../posts.txt", post_id + "\n" + thisClient.userName
                 + "\n" + incomingMessage + "\n" + time_now
                 + "\n\n");                                       //add sweet to the sweet file
 
             logs.AppendText("\nThe following sweet is posted\n");
-            logs.AppendText("Sweet ID: " + sweet_id + "\n");
+            logs.AppendText("Sweet ID: " + post_id + "\n");
             logs.AppendText("Username: " + thisClient.userName + "\n");
             logs.AppendText("Message: " + incomingMessage + "\n");
             logs.AppendText("Time stamp: " + time_now + "\n\n");
-            sweet_id++;
+            post_id++;
         }
 
-        private void Form1_FormClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            listening = false;
-            terminating = true;
-            Environment.Exit(0);
-        }
-      
+        
     }
 }
