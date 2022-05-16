@@ -23,7 +23,7 @@ namespace step1_client
         bool connected = false;         //connected to the server
         bool disconnected = false;      //only becomes true when disconnect button is clicked, when reconnected becomes false
         Socket clientSocket;
-        string username;                //user name of the client
+        string username;               
         string currentTextBoxInUse = "none";    //to switch between output text boxes
         public Form1()
         {
@@ -99,7 +99,7 @@ namespace step1_client
                 {
                     if (!terminating)
                     {
-                        logs.AppendText("The server did not accept the user name!\n");
+                        logs.AppendText("The server did not accept the user name. User is already connected!\n");
                         buttonConnect.Enabled = true;
                         textBoxPost.Enabled = false;
                         buttonPost.Enabled = false;
@@ -158,8 +158,8 @@ namespace step1_client
         {
             currentTextBoxInUse = "default";
 
-            string operation = "post";
-            Byte[] buffer = Encoding.Default.GetBytes(operation);
+            string action = "post";
+            Byte[] buffer = Encoding.Default.GetBytes(action);
             clientSocket.Send(buffer);
 
             string message = textBoxPost.Text;
@@ -169,7 +169,7 @@ namespace step1_client
                 Byte[] buffer2 = Encoding.Default.GetBytes(message);
                 clientSocket.Send(buffer2);                              
 
-                logs.AppendText("\nThe following sweet is posted\n");
+                logs.AppendText("\nThe following post is posted\n");
                 logs.AppendText("Username: " + username + "\n");
                 logs.AppendText("Message: " + message + "\n");
                 logs.AppendText("Time stamp: " + DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss") + "\n\n");
@@ -207,9 +207,8 @@ namespace step1_client
         private void buttonGetPosts_Click(object sender, EventArgs e)
         {
             
-
-            string operation = "request";
-            Byte[] buffer = Encoding.Default.GetBytes(operation);
+            string action = "request";
+            Byte[] buffer = Encoding.Default.GetBytes(action);
             clientSocket.Send(buffer);                              //get posts from server
 
             logs.AppendText("\nRequested posts: \n");

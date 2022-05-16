@@ -38,12 +38,12 @@ namespace cs408_project_server
             InitializeComponent();
         }
         
-        private int get_post_id()          //get sweet id for the next sweet
+        private int get_post_id()          //get post id for the next post
         {
-            string filename = @"sweets.txt";
+            string filename = @"posts.txt";
             if (System.IO.File.Exists(filename))
             {
-                if (new FileInfo(filename).Length == 0) //no sweets posted yet
+                if (new FileInfo(filename).Length == 0) //no posts posted yet
                 {
                     return 0;
                 }
@@ -51,17 +51,17 @@ namespace cs408_project_server
                 {
                     var lines = File.ReadAllLines(filename).Reverse();  //read the file in reverse to find the last id
                     int count = 0;
-                    int lastID = 0;
+                    int id = 0;
                     foreach (string line in lines)
                     {
                         if (count == 4)
                         {
-                            lastID = Int32.Parse(line);
+                            id = Int32.Parse(line);
                             break;
                         }
                         count++;
                     }
-                    return lastID + 1;      //next id = last id + 1
+                    return id + 1;   
                 }
             }
             else
@@ -176,16 +176,16 @@ namespace cs408_project_server
                     thisClient.clientSocket.Receive(buffer);
                     Console.WriteLine(Encoding.Default.GetString(buffer));
 
-                    string operation = Encoding.Default.GetString(buffer);          //the client sends the name of the operation
-                    operation = operation.Substring(0, operation.IndexOf("\0"));    //to be completed before sending actual data
+                    string action = Encoding.Default.GetString(buffer);          //the client sends the name of the operation
+                    action = action.Substring(0, action.IndexOf("\0"));    //to be completed before sending actual data
 
-                    if (operation == "request")
+                    if (action == "request")
                     {
-                        sendRequested(thisClient);
+                        send_Requested_Posts(thisClient);
                     }
-                    else if (operation == "post")
+                    else if (action == "post")
                     {
-                        postMessage(thisClient);
+                        SharePost(thisClient);
                     }
 
                 }
@@ -212,46 +212,46 @@ namespace cs408_project_server
             Byte[] buffer = BitConverter.GetBytes(value);
             clientSocket.Send(buffer);
         }
-        private void sendRequested(clientInformation thisClient)    //send all sweets that was not posted by that user
+        private void send_Requested_Posts(clientInformation thisClient)    //send all posts that was not posted by that user
         {
             logs.AppendText("\nThe following sweets are sent to user " + thisClient.userName + ":\n");
 
             string fileName = "../../posts.txt"; ;
             if (System.IO.File.Exists(fileName))
             {
-                if (new FileInfo(fileName).Length != 0)        //we have at least 1 sweet already posted
+                if (new FileInfo(fileName).Length != 0)        //we have at least 1 post already posted
                 {
                     string[] lines = File.ReadAllLines(fileName);
 
-                    string sweet = "";
+                    string post = "";
                     int i = 1;
-                    bool willBeSent = false;
+                    bool sending = false;
 
                     foreach (string line in lines)      //iterate through the sweet file
                     {
-                        if (line != "")             //skip the empty lines
+                        if (line != "")            
                         {
-                            if (i % 4 == 2)         //sweets are written in 4 lines, that's why modula 4 is used
+                            if (i % 4 == 2)         //posts are written in 4 lines, that's why modula 4 is used
                             {
-                                if (line != thisClient.userName)        //sweet's user name must not match with the user name of the client
+                                if (line != thisClient.userName)        //post's user name must not match with the user name of the client
                                 {
-                                    willBeSent = true;      //this sweet will be sent to the client
+                                    sending = true;      //this post will be sent to the client
                                 }
                             }
-                            sweet += line;
-                            sweet += "\n";
+                            post += line;
+                            post += "\n";
 
                             if (i % 4 == 0)
                             {
-                                if (willBeSent)
+                                if (sending)
                                 {
-                                    logs.AppendText(sweet + "\n");
-                                    Byte[] buffer = Encoding.Default.GetBytes(sweet);
-                                    thisClient.clientSocket.Send(buffer);                      //send sweets to client one by one
+                                    logs.AppendText(post + "\n");
+                                    Byte[] buffer = Encoding.Default.GetBytes(post);
+                                    thisClient.clientSocket.Send(buffer);                      //send posts to client one by one
                                     Thread.Sleep(3);    //wait for a short time to give time for client to receive, before sending next data
                                 }
-                                willBeSent = false;
-                                sweet = "";
+                                sending = false;
+                                post = "";
                             }
                             i++;
                         }
@@ -259,7 +259,7 @@ namespace cs408_project_server
                 }
             }
         }
-        private void postMessage(clientInformation thisClient)
+        private void SharePost(clientInformation thisClient)
         {
             Byte[] buffer_3 = new Byte[64];               //receive sweet from client
             thisClient.clientSocket.Receive(buffer_3);
@@ -273,13 +273,12 @@ namespace cs408_project_server
                 + "\n\n");                                       //add sweet to the sweet file
 
             logs.AppendText("\nThe following sweet is posted\n");
-            logs.AppendText("Sweet ID: " + post_id + "\n");
+            logs.AppendText("Post ID: " + post_id + "\n");
             logs.AppendText("Username: " + thisClient.userName + "\n");
             logs.AppendText("Message: " + incomingMessage + "\n");
             logs.AppendText("Time stamp: " + time_now + "\n\n");
             post_id++;
         }
-
-        
+    
     }
 }
